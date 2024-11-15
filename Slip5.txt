@@ -1,0 +1,79 @@
+1)
+Step 3: Edit the Component Files
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-input-display',
+  templateUrl: './input-display.component.html',
+  styleUrls: ['./input-display.component.css']
+})
+export class InputDisplayComponent {
+  // Variable to hold the input value
+  userInput: string = '';
+
+  // Method to handle input change (optional if you want to handle input dynamically)
+  updateInput(value: string): void {
+    this.userInput = value;
+  }
+}
+
+input-display.component.html (Component Template)
+
+<div class="input-container">
+  <h2>Input and Display Component</h2>
+
+  <!-- Input field to take user input -->
+  <input type="text" [(ngModel)]="userInput" placeholder="Enter something..." />
+
+  <div *ngIf="userInput">
+    <h3>You entered: {{ userInput }}</h3>
+  </div>
+</div>
+
+Step 4: Import FormsModule for ngModel
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';  // Import FormsModule
+
+import { AppComponent } from './app.component';
+import { InputDisplayComponent } from './input-display/input-display.component'; // Import the new component
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    InputDisplayComponent  // Declare the new component
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule  // Add FormsModule to imports
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+2)
+
+// Import the built-in 'http' module
+const http = require('http');
+
+// Define the server
+const server = http.createServer((req, res) => {
+  // Set the response header to indicate it's an HTML content
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+
+  // Send a response body
+  res.end('<h1>Hello, Node.js Server!</h1><p>Welcome to your first Node.js server.</p>');
+});
+
+// Define the port and host where the server will listen
+const port = 3000;
+const host = 'localhost';
+
+// Make the server listen on the specified host and port
+server.listen(port, host, () => {
+  console.log(`Server running at http://${host}:${port}`);
+});
+

@@ -1,0 +1,91 @@
+1)
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS ng-repeat Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('myApp', [])
+      .controller('companyController', function($scope) {
+        // Array of companies with details
+        $scope.companies = [
+          { id: 1, name: "Company A", workforce: 25 },
+          { id: 2, name: "Company B", workforce: 40 },
+          { id: 3, name: "Company C", workforce: 15 },
+          { id: 4, name: "Company D", workforce: 50 }
+        ];
+      });
+  </script>
+</head>
+<body ng-controller="companyController">
+
+  <h2>Company Details</h2>
+
+  <!-- Table to display company details using ng-repeat -->
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Workforce</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- ng-repeat to loop through the companies array -->
+      <tr ng-repeat="company in companies">
+        <td>{{ company.id }}</td>
+        <td>{{ company.name }}</td>
+        <td>{{ company.workforce }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>
+
+
+2)
+
+// Import required packages
+const express = require('express');
+const { body, validationResult } = require('express-validator');
+const bodyParser = require('body-parser');
+
+// Initialize Express app
+const app = express();
+
+// Middleware to parse JSON and URL-encoded form data
+app.use(bodyParser.json()); // For parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+
+// Sample route for POST requests
+app.post('/submit', [
+  // Validate and sanitize input data
+  body('name').notEmpty().withMessage('Name is required').trim().escape(),
+  body('email').isEmail().withMessage('Email must be a valid email address').normalizeEmail(),
+  body('age').isInt({ min: 18 }).withMessage('Age must be at least 18'),
+
+  // Handle request and validation
+  (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    // If validation passes, proceed with processing the data
+    const { name, email, age } = req.body;
+    res.json({
+      message: 'Form submitted successfully!',
+      data: { name, email, age }
+    });
+  }
+]);
+
+// Start the Express server
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});

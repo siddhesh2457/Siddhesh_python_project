@@ -1,0 +1,160 @@
+1)
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Details Table</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('myApp', [])
+      .controller('bankController', function($scope) {
+        // Bank details array
+        $scope.banks = [
+          {
+            name: 'Bank of America',
+            micrCode: '123456789',
+            ifscCode: 'BOFA1234567',
+            address: '123, Main Street, New York, NY'
+          },
+          {
+            name: 'State Bank of India',
+            micrCode: '987654321',
+            ifscCode: 'SBIN9876543',
+            address: '456, Market Road, Mumbai, MH'
+          },
+          {
+            name: 'HDFC Bank',
+            micrCode: '456789123',
+            ifscCode: 'HDFC4567890',
+            address: '789, Park Avenue, Delhi, DL'
+          }
+        ];
+      });
+  </script>
+</head>
+<body ng-controller="bankController">
+
+  <h2>Bank Details</h2>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Bank Name</th>
+        <th>MICR Code</th>
+        <th>IFSC Code</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="bank in banks">
+        <td>{{ bank.name }}</td>
+        <td>{{ bank.micrCode }}</td>
+        <td>{{ bank.ifscCode }}</td>
+        <td>{{ bank.address }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>
+
+
+2)
+
+Modify the generated data.service.ts file to include HttpClient and an Observable.
+
+// src/app/data.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+
+  private apiUrl = 'https://jsonplaceholder.typicode.com/posts';  // Example API URL
+
+  constructor(private http: HttpClient) { }
+
+  // Function to fetch data from the API using HttpClient and return as Observable
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+}
+
+
+
+Step 3: Modify app.module.ts to Import HttpClientModule
+
+// src/app/app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+
+import { AppComponent } from './app.component';
+import { DataService } from './data.service'; // Import the DataService
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule // Add HttpClientModule to imports
+  ],
+  providers: [DataService],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Step 4: Fetch Data in the Component
+// src/app/app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service'; // Import DataService
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  posts: any[] = [];  // Array to hold the fetched posts
+
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    // Fetch data when the component initializes
+    this.dataService.getData().subscribe(
+      (data) => {
+        this.posts = data;  // Assign fetched data to the posts array
+        console.log(this.posts);
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+      }
+    );
+  }
+}
+
+
+
+Step 5: Display Data in app.component.html
+
+<!-- src/app/app.component.html -->
+<div class="container">
+  <h2>Fetched Posts</h2>
+
+  <ul *ngIf="posts.length > 0">
+    <li *ngFor="let post of posts">
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.body }}</p>
+    </li>
+  </ul>
+
+  <p *ngIf="posts.length === 0">Loading posts...</p>
+</div>
+
+
+

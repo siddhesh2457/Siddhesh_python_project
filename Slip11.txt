@@ -1,0 +1,85 @@
+1)
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+// Dummy in-memory storage for movies (replace with a database in a real-world app)
+let movies = [];
+
+// Route for creating a new movie (POST /movies)
+app.post('/movies', (req, res) => {
+  const { title, director, releaseYear, genre } = req.body;
+
+  // Validate input data
+  if (!title || !director || !releaseYear || !genre) {
+    return res.status(400).json({
+      error: 'Title, director, release year, and genre are required fields'
+    });
+  }
+
+  if (isNaN(releaseYear) || releaseYear < 1900 || releaseYear > new Date().getFullYear()) {
+    return res.status(400).json({
+      error: 'Release year must be a valid number between 1900 and the current year'
+    });
+  }
+
+  // Create a new movie object
+  const newMovie = {
+    id: movies.length + 1, // Simple ID generation
+    title,
+    director,
+    releaseYear,
+    genre
+  };
+
+  // Add the new movie to the movies array
+  movies.push(newMovie);
+
+  // Respond with the newly created movie
+  res.status(201).json({
+    message: 'Movie created successfully',
+    movie: newMovie
+  });
+});
+
+// Route for getting all movies (GET /movies)
+app.get('/movies', (req, res) => {
+  res.status(200).json(movies);
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+
+2)
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css']
+})
+export class StudentListComponent implements OnInit {
+  // Sample array of students with their names and the sports they play
+  students = [
+    { name: 'John Doe', sport: 'Basketball' },
+    { name: 'Jane Smith', sport: 'Football' },
+    { name: 'Sam Brown', sport: 'Basketball' },
+    { name: 'Emily Davis', sport: 'Soccer' },
+    { name: 'Michael Johnson', sport: 'Basketball' }
+  ];
+
+  basketballPlayers: string[] = [];
+
+  ngOnInit(): void {
+    // Use filter and map to find the names of students who play basketball
+    this.basketballPlayers = this.students
+      .filter(student => student.sport === 'Basketball')  // filter out basketball players
+      .map(student => student.name);  // map the result to an array of names
+  }
+}

@@ -1,0 +1,98 @@
+1)
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON and URL-encoded form data
+app.use(bodyParser.json());  // Parse JSON data
+app.use(bodyParser.urlencoded({ extended: true }));  // Parse URL-encoded data
+
+// Dummy in-memory storage for users (replace with a database in real-world apps)
+let users = [];
+
+// Middleware to validate the input data for creating a new user
+function validateUserInput(req, res, next) {
+  const { name, email, age } = req.body;
+
+  // Check if name, email, and age are provided
+  if (!name || !email || !age) {
+    return res.status(400).json({ error: 'Name, email, and age are required fields' });
+  }
+
+  // Check if age is a valid number
+  if (isNaN(age)) {
+    return res.status(400).json({ error: 'Age must be a valid number' });
+  }
+
+  // If input is valid, proceed to the next middleware
+  next();
+}
+
+// Route for creating a new user (POST /users)
+app.post('/users', validateUserInput, (req, res) => {
+  const { name, email, age } = req.body;
+
+  // Create a new user object
+  const newUser = {
+    id: users.length + 1, // Simple ID generation
+    name,
+    email,
+    age
+  };
+
+  // Add the new user to the users array
+  users.push(newUser);
+
+  // Respond with the newly created user
+  res.status(201).json({
+    message: 'User created successfully',
+    user: newUser
+  });
+});
+
+// Route for getting all users (GET /users)
+app.get('/users', (req, res) => {
+  res.status(200).json(users);
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+
+
+2)
+Step 3: Modify the Component
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-input-display',
+  templateUrl: './input-display.component.html',
+  styleUrls: ['./input-display.component.css']
+})
+export class InputDisplayComponent {
+  userInput: string = ''; // Variable to store the input data
+
+  // Method to update the user input (optional, to demonstrate interaction)
+  updateInput(value: string) {
+    this.userInput = value;
+  }
+}
+
+input-display.component.html
+
+<div>
+  <h2>Input Data Display</h2>
+
+  <!-- Input field to take user input -->
+  <input type="text" [(ngModel)]="userInput" placeholder="Enter some text">
+
+  <!-- Button to display the input -->
+  <button (click)="updateInput(userInput)">Display</button>
+
+  <p>You entered: {{ userInput }}</p>
+</div>

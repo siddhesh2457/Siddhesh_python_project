@@ -1,0 +1,83 @@
+1)
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS Addition Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('myApp', [])
+      .controller('myController', function($scope) {
+        // Initialize the numbers
+        $scope.num1 = 0;
+        $scope.num2 = 0;
+
+        // Function to calculate the sum
+        $scope.calculateSum = function() {
+          $scope.sum = $scope.num1 + $scope.num2;
+        };
+      });
+  </script>
+</head>
+<body ng-controller="myController">
+
+  <h2>AngularJS Addition Example</h2>
+
+  <!-- Input fields for numbers -->
+  <label for="num1">Number 1:</label>
+  <input type="number" id="num1" ng-model="num1" ng-init="num1=0">
+  <br><br>
+
+  <label for="num2">Number 2:</label>
+  <input type="number" id="num2" ng-model="num2" ng-init="num2=0">
+  <br><br>
+
+  <!-- Button to trigger the calculation -->
+  <button ng-click="calculateSum()" ng-disabled="num1 === 0 || num2 === 0">
+    Calculate Sum
+  </button>
+
+  <!-- Display the result using ng-bind -->
+  <h3 ng-show="sum !== undefined">Sum: <span ng-bind="sum"></span></h3>
+
+</body>
+</html>
+
+
+2)
+const fs = require('fs').promises; // Using fs.promises for async file operations
+
+// Function to read a file asynchronously using promises
+const readFileAsync = async (filePath) => {
+  try {
+    const data = await fs.readFile(filePath, 'utf-8'); // Reading file asynchronously
+    return data;
+  } catch (error) {
+    console.error(`Error reading ${filePath}:`, error);
+    throw error; // Rethrow the error for handling in the caller
+  }
+};
+
+// Function to read multiple files asynchronously
+const readMultipleFiles = async () => {
+  try {
+    const filePaths = ['file1.txt', 'file2.txt', 'file3.txt']; // List of files to read
+    const readPromises = filePaths.map(file => readFileAsync(file)); // Array of promises
+
+    // Wait for all files to be read asynchronously
+    const fileContents = await Promise.all(readPromises);
+
+    // Output the contents of all files
+    fileContents.forEach((content, index) => {
+      console.log(`Content of file${index + 1}:`);
+      console.log(content);
+      console.log('--------------------------');
+    });
+  } catch (error) {
+    console.error('Error reading files:', error);
+  }
+};
+
+// Run the function to read multiple files
+readMultipleFiles();

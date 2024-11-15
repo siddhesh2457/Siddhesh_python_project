@@ -1,0 +1,65 @@
+1)
+// Sample array of employees
+const employees = [
+  { id: 1, name: 'John Doe', salary: 30000 },
+  { id: 2, name: 'Jane Smith', salary: 22000 },
+  { id: 3, name: 'Sam Wilson', salary: 27000 },
+  { id: 4, name: 'Chris White', salary: 20000 }
+];
+
+// Define the ID to find
+const idToFind = 1; // Example ID
+
+// Use the `find` method to check both ID and salary
+const employee = employees.find(emp => emp.id === idToFind && emp.salary > 25000);
+
+if (employee) {
+  console.log('Employee Found:', employee);
+} else {
+  console.log(`No employee found with ID ${idToFind} and salary greater than 25000`);
+}
+
+
+2)
+student-list.component.ts
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css']
+})
+export class StudentListComponent implements OnInit {
+
+  students = [
+    { name: 'John Doe', score: 90 },
+    { name: 'Jane Smith', score: 82 },
+    { name: 'Sam Wilson', score: 85 },
+    { name: 'Emily Davis', score: 88 },
+    { name: 'Alex Brown', score: 72 },
+    { name: 'Chris White', score: 95 }
+  ];
+
+  studentsWith85OrMore: string[] = [];
+
+  constructor() { }
+
+  ngOnInit(): void {
+    // Use filter and map to get students who scored 85 or more
+    this.studentsWith85OrMore = this.students
+      .filter(student => student.score >= 85)  // Filter students with score >= 85
+      .map(student => student.name);           // Map to get their names only
+  }
+
+}
+
+
+student-list.component.html
+
+<div>
+  <h2>Students Who Scored 85% or More</h2>
+  <ul>
+    <li *ngFor="let student of studentsWith85OrMore">{{ student }}</li>
+  </ul>
+</div>

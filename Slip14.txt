@@ -1,0 +1,113 @@
+1)
+student-list.component.ts
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css']
+})
+export class StudentListComponent implements OnInit {
+
+  students = [
+    { name: 'John Doe', score: 90 },
+    { name: 'Jane Smith', score: 82 },
+    { name: 'Sam Wilson', score: 85 },
+    { name: 'Emily Davis', score: 88 },
+    { name: 'Alex Brown', score: 72 },
+    { name: 'Chris White', score: 95 }
+  ];
+
+  studentsWith85OrMore: string[] = [];
+
+  constructor() { }
+
+  ngOnInit(): void {
+    // Using filter and map methods to get names of students who scored 85 or more
+    this.studentsWith85OrMore = this.students
+      .filter(student => student.score >= 85)  // Filter students who scored 85 or more
+      .map(student => student.name);           // Map to get their names only
+  }
+
+}
+
+
+student-list.component.html
+
+<div>
+  <h2>Students Who Got 85% or More</h2>
+  <ul>
+    <li *ngFor="let student of studentsWith85OrMore">{{ student }}</li>
+  </ul>
+</div>
+
+
+2)
+
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+// Dummy in-memory database to store employees
+let employees = [];
+
+// Route to create an employee (POST /employees)
+app.post('/employees', (req, res) => {
+  const { name, jobTitle, department, salary } = req.body;
+
+  if (!name || !jobTitle || !department || !salary) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  // Create a new employee object
+  const newEmployee = {
+    id: employees.length + 1, // Generate a simple ID (auto-increment)
+    name,
+    jobTitle,
+    department,
+    salary
+  };
+
+  // Add the new employee to the "database"
+  employees.push(newEmployee);
+
+  // Respond with the created employee
+  res.status(201).json({
+    message: 'Employee created successfully',
+    employee: newEmployee
+  });
+});
+
+// Route to update an employee (PUT /employees/:id)
+app.put('/employees/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, jobTitle, department, salary } = req.body;
+
+  // Find employee by ID
+  const employee = employees.find(emp => emp.id === parseInt(id));
+
+  if (!employee) {
+    return res.status(404).json({ message: 'Employee not found' });
+  }
+
+  // Update employee details
+  if (name) employee.name = name;
+  if (jobTitle) employee.jobTitle = jobTitle;
+  if (department) employee.department = department;
+  if (salary) employee.salary = salary;
+
+  // Respond with the updated employee
+  res.status(200).json({
+    message: 'Employee updated successfully',
+    employee
+  });
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});

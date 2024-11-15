@@ -1,0 +1,75 @@
+1)
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS Games List</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('myApp', [])
+      .controller('gamesController', function($scope) {
+        // Initialize an empty array for games
+        $scope.games = [];
+
+        // Function to load the list of games
+        $scope.loadGames = function() {
+          $scope.games = [
+            'Football',
+            'Basketball',
+            'Cricket',
+            'Tennis',
+            'Baseball'
+          ];
+        };
+      });
+  </script>
+</head>
+<body ng-controller="gamesController">
+
+  <h2>Game List Example</h2>
+
+  <!-- Initialize the button and use ng-click to load the list -->
+  <button ng-click="loadGames()">Show Game List</button>
+
+  <!-- Display the list of games using ng-bind -->
+  <div ng-init="games=[]" ng-show="games.length > 0">
+    <h3>List of Games:</h3>
+    <ul>
+      <li ng-repeat="game in games" ng-bind="game"></li>
+    </ul>
+  </div>
+
+  <!-- Show a message when no games are loaded -->
+  <div ng-show="games.length === 0">
+    <p>No games loaded. Click the button to load the list.</p>
+  </div>
+
+</body>
+</html>
+
+
+2)
+
+// Array of companies with id and workforce properties
+const companies = [
+  { id: 1, name: "Company A", workforce: 25 },
+  { id: 2, name: "Company B", workforce: 40 },
+  { id: 3, name: "Company C", workforce: 15 },
+  { id: 4, name: "Company D", workforce: 50 }
+];
+
+// Function to find a company by id where workforce > 30
+function findCompanyByWorkforceGreaterThan30(companies) {
+  return companies.find(company => company.workforce > 30);
+}
+
+// Example of finding a company by workforce
+const company = findCompanyByWorkforceGreaterThan30(companies);
+
+// Output the result
+if (company) {
+  console.log(`Company found: ${company.name} with workforce of ${company.workforce}`);
+} else {
+  console.log("No company with workforce greater than 30 found.");
+}

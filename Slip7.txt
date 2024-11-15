@@ -1,0 +1,74 @@
+1)
+const fs = require('fs').promises; // Import fs.promises to use async/await for file operations
+
+// Function to read file asynchronously
+async function readFile(fileName) {
+  try {
+    const data = await fs.readFile(fileName, 'utf-8');
+    console.log(`${fileName}:`);
+    console.log(data);
+    console.log('--------------------------');
+  } catch (error) {
+    console.error(`Error reading ${fileName}:`, error);
+  }
+}
+
+// Function to read multiple files asynchronously
+async function readMultipleFiles() {
+  const files = ['file1.txt', 'file2.txt', 'file3.txt']; // List of files to read
+
+  // Loop through each file and read asynchronously using async/await
+  for (let file of files) {
+    await readFile(file); // Await ensures that files are read sequentially
+  }
+
+  // Alternatively, you can read them in parallel like this:
+  // await Promise.all(files.map(file => readFile(file)));
+}
+
+// Start reading files
+readMultipleFiles();
+
+2)
+const express = require('express');
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
+// Dummy in-memory storage for users (in a real-world app, you would use a database)
+let users = [];
+
+// Route for creating a new user (POST /users)
+app.post('/users', (req, res) => {
+  const { name, email } = req.body;
+
+  // Check if user data is valid
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
+  }
+
+  // Create a new user object
+  const newUser = {
+    id: users.length + 1, // Simple id generation
+    name,
+    email
+  };
+
+  // Add the new user to the users array
+  users.push(newUser);
+
+  // Respond with the newly created user
+  res.status(201).json(newUser);
+});
+
+// Route for fetching all users (GET /users)
+app.get('/users', (req, res) => {
+  res.status(200).json(users);
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
